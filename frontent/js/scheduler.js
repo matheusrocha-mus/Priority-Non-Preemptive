@@ -32,8 +32,12 @@ function priorityScheduling(processes) {
         const availableProcesses = processes.filter(p => p.arrivalTime <= currentTime && p.remainingTime > 0);
 
         if (availableProcesses.length > 0) {
-            // Ordena os processos disponíveis pela prioridade (menor valor = maior prioridade)
-            availableProcesses.sort((a, b) => a.priority - b.priority);
+            // Ordena os processos disponíveis pela prioridade (menor valor = maior prioridade) depois pelo tempo de execução (menor valor = maior prioridade) e por último pela ordem de chegada (menor valor = maior prioridade)
+            availableProcesses.sort((a, b) => {
+                if (a.priority !== b.priority) return a.priority - b.priority;
+                else if (a.burstTime !== b.burstTime) return a.burstTime - b.burstTime;
+                else return a.arrivalTime - b.arrivalTime;
+            });
 
             // Seleciona o processo com maior prioridade (menor valor de prioridade)
             const currentProcess = availableProcesses[0];
@@ -70,16 +74,16 @@ function displayGanttChart(ganttData) {
     const totalTime = Math.max(...ganttData.map(g => g.endTime));
     
     // Adiciona a linha de tempos (header)
-    let timeRow = '<tr><th>Tempo</th>';
+    let timeRow = '<tr><th class="timeHeader">Tempo</th>';
     for (let i = 0; i < totalTime; i++) {
-        timeRow += `<th>${i}</th>`;
+        timeRow += `<th class="timeHeader">${i}</th>`;
     }
     timeRow += '</tr>';
     ganttTable.innerHTML += timeRow;
 
     // Adiciona as linhas para cada processo
     ganttData.forEach(data => {
-        let processRow = `<tr><td>${data.processName}</td>`;
+        let processRow = `<tr><th class="processHeader">${data.processName}</th>`;
         for (let i = 0; i < totalTime; i++) {
             if (i >= data.startTime && i < data.endTime) {
                 processRow += `<td class="ganttCell">X</td>`;
@@ -96,12 +100,19 @@ function displayGanttChart(ganttData) {
 document.addEventListener("DOMContentLoaded", function () {
     let processes = [];
 
-    document.getElementById('modal').addEventListener('submit', function(event) {
+    document.getElementById('processForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
         const process = Object.fromEntries(formData);
 
-        console.log("Process: ", process);
+        Object.keys(process).forEach(key => process[key] = parseInt(process[key]));
+
+        process.name = "P" + (processes.length + 1);
+        process.remainingTime = process.burstTime;
+
+        const modal = document.getElementById('processModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+        modalInstance.hide();
 
         addProcess(processes, process);
     });
