@@ -106,6 +106,8 @@ button:hover {
     width: max-content;
     border-collapse: collapse;
     margin-top: 10px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #ganttChart th, #ganttChart td {

@@ -1,40 +1,43 @@
-let processes = [];
-
 // Função para adicionar um novo processo
-function addProcess(name, arrivalTime, burstTime, priority) {
-    const process = {
-        name: name,
-        arrivalTime: parseInt(arrivalTime),
-        burstTime: parseInt(burstTime),
-        priority: parseInt(priority),
-        remainingTime: parseInt(burstTime),
-    };
+function addProcess(processes, process) {
     processes.push(process);
+
+    displayNewProcess(process);
 }
 
-// Função para obter todos os processos
-function getProcesses() {
-    return processes;
+// Função para exibir os processos na tabela
+function displayNewProcess(process) {
+    const tableBody = document.querySelector('#processList tbody');
+    const newRow = document.createElement('tr');
+
+    newRow.innerHTML = `
+        <td>${process.name}</td>
+        <td>${process.arrivalTime}</td>
+        <td>${process.burstTime}</td>
+        <td>${process.priority}</td>
+    `;
+
+    tableBody.appendChild(newRow);
 }
 
 // Algoritmo de Escalonamento por Prioridade (Não Preemptivo)
-function priorityScheduling() {
+function priorityScheduling(processes) {
     let currentTime = 0;
     let ganttData = [];
     let completedProcesses = 0;
     const totalProcesses = processes.length;
-    
+
     while (completedProcesses < totalProcesses) {
         // Filtra os processos que já chegaram e que ainda têm tempo restante
         const availableProcesses = processes.filter(p => p.arrivalTime <= currentTime && p.remainingTime > 0);
-        
+
         if (availableProcesses.length > 0) {
             // Ordena os processos disponíveis pela prioridade (menor valor = maior prioridade)
             availableProcesses.sort((a, b) => a.priority - b.priority);
-            
+
             // Seleciona o processo com maior prioridade (menor valor de prioridade)
             const currentProcess = availableProcesses[0];
-            
+
             // Adiciona o processo ao gráfico de Gantt com seu tempo de execução total
             ganttData.push({
                 processName: currentProcess.name,
@@ -57,36 +60,6 @@ function priorityScheduling() {
     }
 
     return ganttData;
-}
-
-// Função para processar o arquivo CSV e adicionar os processos
-function processFile(content) {
-    const lines = content.split('\n');
-    lines.forEach(line => {
-        const [name, arrivalTime, burstTime, priority] = line.split(',');
-        if (name && arrivalTime && burstTime && priority) {
-            addProcess(name.trim(), parseInt(arrivalTime), parseInt(burstTime), parseInt(priority));
-        }
-    });
-    displayProcesses();
-}
-
-// Função para exibir os processos na tabela
-function displayProcesses() {
-    const tableBody = document.querySelector('#processList tbody');
-    tableBody.innerHTML = '';
-
-    const processes = getProcesses();
-    processes.forEach(process => {
-        tableBody.innerHTML += `
-            <tr>
-                <td>${process.name}</td>
-                <td>${process.arrivalTime}</td>
-                <td>${process.burstTime}</td>
-                <td>${process.priority}</td>
-            </tr>
-        `;
-    });
 }
 
 // Função para exibir o gráfico de Gantt com "X" para tempo de execução
@@ -119,27 +92,25 @@ function displayGanttChart(ganttData) {
     });
 }
 
-// Função para ler o arquivo CSV carregado
-function readFile(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-        const content = e.target.result;
-        processFile(content);
-    };
-
-    if (file) {
-        reader.readAsText(file);
-    }
-}
-
 // Função principal para iniciar o escalonamento e exibir o gráfico de Gantt
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById('fileInput').addEventListener('change', readFile);
+    let processes = [];
+
+    document.getElementById('modal').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const process = Object.fromEntries(formData);
+
+        console.log("Process: ", process);
+
+        addProcess(processes, process);
+    });
 
     document.getElementById('startScheduling').addEventListener('click', function() {
-        const ganttData = priorityScheduling();
-        displayGanttChart(ganttData);
+        if (processes.length === 0) alert('Adicione pelo menos um processo antes de iniciar o escalonamento!');
+        else {
+            const ganttData = priorityScheduling(processes);
+            displayGanttChart(ganttData);
+        }
     });
 });
