@@ -27,7 +27,7 @@ body {
     overflow: auto;
 }
 
-h1, h2 {
+h2, h3 {
     text-align: center;
     color: #ffffff;
     margin-bottom: 20px;
@@ -134,4 +134,14 @@ button:hover {
 
 .ganttEmptyCell {
     background-color: #2e2e2e;
+}
+
+#ganttChart th.processHeader {
+    background-color: #f56a00; /* Laranja */
+    color: #ffffff;
+}
+
+#ganttChart th.timeHeader {
+    background-color: #4a90e2; /* Azul */
+    color: #ffffff;
 }
