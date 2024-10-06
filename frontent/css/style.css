@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    max-width: 95%;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+    color: #f5f5f5;
+}
+
+input[type="file"] {
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #4a90e2;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #2e2e2e;
+    color: #f5f5f5;
+}
+
+button {
+    background-color: #f56a00;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: 700;
+}
+
+button:hover {
+    background-color: #e65c00;
+}
+
+#processListContainer table {
+    width: 100%; 
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+#processListContainer th, #processListContainer td {
+    padding: 10px 20px; 
+    text-align: center;  
+    border: 1px solid #333;  
+}
+
+#processListContainer th {
+    background-color: #4a90e2; 
+    color: white; 
+    font-weight: bold;  
+}
+
+#processListContainer td {
+    background-color: #2a2a2a;  
+    color: #f5f5f5;  
+}
+
+#processListContainer {
+    margin-top: 20px;
+}
+
+#ganttChartContainer {
+    width: 100%;
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+#ganttChart {
+    width: max-content;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#ganttChart th, #ganttChart td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: center;
+}
+
+#ganttChart th {
+    background-color: #4a90e2;
+    color: #ffffff;
+}
+
+#ganttChart td {
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+.ganttCell {
+    background-color: #4a90e2;
+    color: white;
+    height: 40px;
+}
+
+.ganttEmptyCell {
+    background-color: #2e2e2e;
+}
